@@ -12,6 +12,7 @@ def thermal_avg_sigma_v(sigma_func, m_chi, T):
         if s < 4 * m_chi**2:
             return 0.0
         K1 = sp.k1(np.sqrt(s) / T)
+        # print(sigma_func(s))
         return sigma_func(s) * (s - 4 * m_chi**2) * np.sqrt(s) * K1
 
     s_min = 4 * m_chi**2
@@ -19,4 +20,4 @@ def thermal_avg_sigma_v(sigma_func, m_chi, T):
     K2 = sp.kn(2, m_chi / T)
     
     prefactor = 1 / (8 * m_chi**4 * T * K2**2)
-    return prefactor * result
+    return abs(prefactor * result)

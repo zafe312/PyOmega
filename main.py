@@ -5,6 +5,7 @@ from thermal_average import thermal_avg_sigma_v
 from sympy.utilities.lambdify import lambdify
 import sympy as sp
 import numpy as np
+from relic_density import compute_relic_density
 
 
 model = load_ufo_model("models/SingletScalarDM_UFO")
@@ -32,7 +33,7 @@ v = sp.Symbol('v')
 param_subs = {
     mh: 125.0,         # Higgs mass in GeV
     Gamma_h: 0.004,    # Higgs width in GeV
-    LSH: 0.01,          # Example coupling strength (can be complex if needed)
+    LSH: 0.0001,          # Example coupling strength (can be complex if needed)
     v: 246.0            # Higgs vev in GeV
 }
 for v, target in channels:
@@ -52,7 +53,27 @@ sigma_expr_clean = sigma_expr.replace(sp.conjugate, lambda x: x)
 sigma_numeric = sp.lambdify(s, sigma_expr_clean, modules=[lambdify_namespace, "numpy"])
 
 T = 5.0  # Example temperature in GeV
-m_chi_val = float(dm.mass.value)
+m_chi_val = 100#float(dm.mass.value)
 
 sigma_v = thermal_avg_sigma_v(sigma_numeric, m_chi_val, T)
 print(f"\n⟨σv⟩ at T = {T} GeV ≈ {sigma_v:.3e} GeV⁻²")
+
+
+m_chi_val_list = np.logspace(1,3,100)
+omega_h2_list = []
+
+for m_chi_val in m_chi_val_list:
+    omega_h2, x_f = compute_relic_density(m_chi_val, sigma_numeric)
+
+    # print(f"Freeze-out x_f ≈ {x_f:.2f}")
+    # print(f"Relic density Ωχ h² ≈ {omega_h2:.4f}")
+    omega_h2_list.append(omega_h2)
+
+import matplotlib.pyplot as plt
+plt.plot(m_chi_val_list,omega_h2_list)
+plt.axhline(y=0.12, color='black', linestyle='--', label='Ωh² = 0.12')
+plt.xlabel('$m_{DM}$ [GeV]')
+plt.ylabel('$\\Omega_{DM} h^2$')
+plt.loglog()
+plt.legend()
+plt.show()
