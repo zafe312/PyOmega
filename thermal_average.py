@@ -16,7 +16,7 @@ def thermal_avg_sigma_v(sigma_func, m_chi, T):
 
     s_min = 4 * m_chi**2
     result, _ = integrate.quad(integrand, s_min, s_min * 100, limit=500)
-    K2 = sp.k2(m_chi / T)
+    K2 = sp.kn(2, m_chi / T)
     
     prefactor = 1 / (8 * m_chi**4 * T * K2**2)
     return prefactor * result

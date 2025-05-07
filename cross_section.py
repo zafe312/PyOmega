@@ -14,18 +14,18 @@ def build_scalar_annihilation_cross_section(vertex, dm_mass_val, param_subs={}):
     # Only for scalar DM via Higgs-like mediator
     s = sp.Symbol('s', positive=True)
     m_dm = sp.Symbol('m_dm', positive=True)
-    mh, Gamma_h = sp.symbols('mh Gamma_h', positive=True)
+    mh = sp.symbols('mh', positive=True)
+    Gamma_h = sp.symbols('Gamma_h', positive=True)
 
     # Coupling: symbolic from UFO
     coupling_str = vertex.couplings[(0,0)].value
 
     # Convert to symbolic expression
-    # clean = coupling_str.replace("complex(0,1)", "I").replace("complexconjugate", "sp.conjugate")
-    # g = sp.sympify(clean, locals={"I": sp.I})
     clean = coupling_str.replace("complex(0,1)", "I")
     local_dict = {
         "I": sp.I,
         "conjugate": sp.conjugate,
+        "complexconjugate": sp.conjugate,
     }
     g = sp.sympify(clean, locals=local_dict)
 
