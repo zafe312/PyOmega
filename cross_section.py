@@ -1,4 +1,5 @@
 import sympy as sp
+import re
 
 def extract_annihilation_channels(model, dm_name):
     # Look for vertices with 2 DM + 1 SM particle
@@ -22,10 +23,11 @@ def build_scalar_annihilation_cross_section(vertex, dm_mass_val, param_subs={}):
 
     # Convert to symbolic expression
     clean = coupling_str.replace("complex(0,1)", "I")
+    clean = clean.replace("cmath.sqrt", "sqrt")
     local_dict = {
         "I": sp.I,
         "conjugate": sp.conjugate,
-        "complexconjugate": sp.conjugate,
+        "complexconjugate": sp.conjugate
     }
     g = sp.sympify(clean, locals=local_dict)
 

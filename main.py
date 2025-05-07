@@ -7,8 +7,10 @@ import sympy as sp
 import numpy as np
 from relic_density import compute_relic_density
 
+# model_path = "models/SingletScalarDM_UFO"
+model_path = "models/SingletDoubletDM_UFO"
 
-model = load_ufo_model("models/SingletScalarDM_UFO")
+model = load_ufo_model(model_path)
 dm = model.find_dark_matter_candidate()
 
 if dm:
@@ -29,12 +31,15 @@ mh = sp.Symbol('mh', positive=True)
 Gamma_h = sp.Symbol('Gamma_h', positive=True)
 LSH = sp.Symbol('LSH')
 v = sp.Symbol('v')
+LS12 = sp.Symbol('LS12')
+
 
 param_subs = {
     mh: 125.0,         # Higgs mass in GeV
     Gamma_h: 0.004,    # Higgs width in GeV
-    LSH: 0.0001,          # Example coupling strength (can be complex if needed)
-    v: 246.0            # Higgs vev in GeV
+    LSH: 0.000001,          # Example coupling strength (can be complex if needed)
+    v: 246.0,            # Higgs vev in GeV
+    LS12: 0.0001
 }
 for v, target in channels:
     print(f"  {dm_name} {dm_name} → {target.name} via vertex {v.name}")
@@ -59,7 +64,7 @@ sigma_v = thermal_avg_sigma_v(sigma_numeric, m_chi_val, T)
 print(f"\n⟨σv⟩ at T = {T} GeV ≈ {sigma_v:.3e} GeV⁻²")
 
 
-m_chi_val_list = np.logspace(1,3,100)
+m_chi_val_list = np.logspace(0,5,1000)
 omega_h2_list = []
 
 for m_chi_val in m_chi_val_list:
